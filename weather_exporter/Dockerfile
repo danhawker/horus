@@ -17,9 +17,11 @@ ADD ./config/sample.json /etc/weather_exporter/config.json
 
 # Add exporter
 ADD ./src/weather_exporter /opt/weather_exporter
-RUN chmod +x /opt/weather_exporter/*
 
+# Expose a port
 EXPOSE 9265
+
+# Set the user to nobody/65534 - no need to run as root
 USER 65534
 
 ENTRYPOINT ["/opt/weather_exporter/exporter.py", "--config=/etc/weather_exporter/config.json"]
