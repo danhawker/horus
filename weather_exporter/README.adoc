@@ -1,0 +1,12 @@
+== Weather Exporter
+
+A simple weather exporter for Prometheus that leverages the DarkSky API.
+
+Based on existing work from https://github.com/celliott/weather_exporter
+
+Slight changes to use the Red Hat UBI8 image, and a systemd file to run the container as a system container with Podman.
+
+For system containers, I place any configurations and data for each container in `/opt/containers/<container_name>`
+
+To run the container as a systemd service, simply copy the systemd unit file from the systemd dir to `/etc/systemd/system/` run `systemd daemon-reload` and simply start the service with `systemctl start container-weather_exporter.service`
+

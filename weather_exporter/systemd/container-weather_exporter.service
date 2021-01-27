@@ -1,0 +1,24 @@
+[Unit]
+Description=Containerised Weather Exporter for Prometheus
+After=network-online.target
+
+[Service]
+Type=simple
+TimeoutStartSec=5m
+ExecStartPre=-/usr/bin/podman rm "weather_exporter-service"
+ExecStartPre=/usr/bin/rm -f /%t/%n-pid /%t/%n-cid
+
+ExecStart=/usr/bin/podman run --name weather_exporter-service --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid -v /opt/containers/weather_exporter/etc/config.json:/etc/weather_exporter/config.json:Z --network host quay.io/danhawker/weather_exporter 
+
+PIDFile=/%t/%n-pid
+
+ExecReload=-/usr/bin/podman stop "weather_exporter-service"
+ExecReload=-/usr/bin/podman rm "weather_exporter-service"
+ExecStop=-/usr/bin/podman stop "weather_exporter-service"
+
+Restart=on-failure
+#Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

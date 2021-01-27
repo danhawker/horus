@@ -1,0 +1,6 @@
+{
+    "dark_sky_api_key": null,
+    "units": "uk2",
+    "scrape_interval": 600,
+    "cities": "london,cardiff,san francisco"
+}
