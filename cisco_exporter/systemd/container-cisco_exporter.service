@@ -1,6 +1,6 @@
 [Unit]
 Description=Cisco Exporter for Prometheus
-After=network.target
+After=network-online.target
 
 [Service]
 Type=simple
@@ -8,7 +8,10 @@ TimeoutStartSec=5m
 ExecStartPre=-/usr/bin/podman rm "cisco_exporter-service"
 ExecStartPre=/usr/bin/rm -f /%t/%n-pid /%t/%n-cid
 
-ExecStart=/usr/bin/podman run --name cisco_exporter-service --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid -v /opt/containers/cisco_exporter/etc/id_rsa_cisco_exporter:/id_rsa_cisco_exporter:Z --network host cisco_exporter -ssh.targets=192.168.1.1, 192.168.1.2 -ssh.user=admin -ssh.keyfile=/id_rsa_cisco_exporter -ssh.timeout=30
+ExecStart=/usr/bin/podman run --name cisco_exporter-service --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid -v /opt/containers/cisco_exporter/etc/id_rsa_cisco_exporter:/id_rsa_cisco_exporter:Z --network host quay.io/danhawker/cisco_exporter -ssh.targets=192.168.1.1,192.168.1.2 -ssh.user=admin -ssh.keyfile=/id_rsa_cisco_exporter -ssh.timeout=30
+
+# add -debug=true to enable debug messages
+# add -legacy-ciphers=true to allow older legacy ssh ciphers for older IOS versions
 
 PIDFile=/%t/%n-pid
 
