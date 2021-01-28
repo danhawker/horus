@@ -1,0 +1,24 @@
+[Unit]
+Description=Speedtest Exporter for Prometheus
+After=network.target
+
+[Service]
+Type=simple
+TimeoutStartSec=5m
+ExecStartPre=-/usr/bin/podman rm "speedtest_exporter-service"
+ExecStartPre=/usr/bin/rm -f /%t/%n-pid /%t/%n-cid
+
+ExecStart=/usr/bin/podman run --name speedtest_exporter-service --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid --network host quay.io/danhawker/speedtest_exporter
+
+PIDFile=/%t/%n-pid
+
+ExecReload=-/usr/bin/podman stop "speedtest_exporter-service"
+ExecReload=-/usr/bin/podman rm "speedtest_exporter-service"
+ExecStop=-/usr/bin/podman stop "speedtest_exporter-service"
+
+Restart=on-failure
+#Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

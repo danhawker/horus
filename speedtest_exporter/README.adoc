@@ -1,0 +1,9 @@
+== Speedtest Exporter
+
+A simple exporter for Prometheus that leverages `speedtest.net` to monitor Internet connectivity upload, download and latency.
+
+Container image code is stored in https://github.com/danhawker/speedtest_exporter
+
+This repo includes a file to run the container as a system container with Podman.
+
+To run the container as a systemd service, simply copy the systemd unit file from the systemd dir to `/etc/systemd/system/` run `systemd daemon-reload` and simply start the service with `systemctl start container-speedtest_exporter.service`
