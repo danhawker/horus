@@ -1,0 +1,15 @@
+== Cisco Exporter
+
+A simple exporter for Prometheus that exports Cisco runtime data from iOS and NXOS devices.
+
+Based on existing work from https://github.com/lwlcom/cisco_exporter
+
+Slight changes to use the Red Hat UBI8 image, and a systemd file to run the container as a system container with Podman.
+
+The exporter uses SSH Keys to connect to your Cisco devices, so I create an SSH Key and map this into the container for use. I then reference this within my systemd file. See the systemd unit file provided for an example.
+
+Set the devices you wish the exporter to scrape, by passing a list of comman delimited IP addresses to the `-ssh.targets` command line switch. Again, see the systemd unit file provided for an example.
+
+For system containers, I place any configurations and data for each container in `/opt/containers/<container_name>`
+
+To run the container as a systemd service, simply copy the systemd unit file from the systemd dir to `/etc/systemd/system/` run `systemd daemon-reload` and simply start the service with `systemctl start container-cisco_exporter.service`

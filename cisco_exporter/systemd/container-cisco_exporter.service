@@ -1,0 +1,24 @@
+[Unit]
+Description=Cisco Exporter for Prometheus
+After=network.target
+
+[Service]
+Type=simple
+TimeoutStartSec=5m
+ExecStartPre=-/usr/bin/podman rm "cisco_exporter-service"
+ExecStartPre=/usr/bin/rm -f /%t/%n-pid /%t/%n-cid
+
+ExecStart=/usr/bin/podman run --name cisco_exporter-service --conmon-pidfile /%t/%n-pid --cidfile /%t/%n-cid -v /opt/containers/cisco_exporter/etc/id_rsa_cisco_exporter:/id_rsa_cisco_exporter:Z --network host cisco_exporter -ssh.targets=192.168.1.1, 192.168.1.2 -ssh.user=admin -ssh.keyfile=/id_rsa_cisco_exporter -ssh.timeout=30
+
+PIDFile=/%t/%n-pid
+
+ExecReload=-/usr/bin/podman stop "cisco_exporter-service"
+ExecReload=-/usr/bin/podman rm "cisco_exporter-service"
+ExecStop=-/usr/bin/podman stop "cisco_exporter-service"
+
+Restart=on-failure
+#Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target
